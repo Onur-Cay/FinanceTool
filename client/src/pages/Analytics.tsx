@@ -56,13 +56,15 @@ export default function Analytics() {
   useEffect(() => { fetchData() }, [currentMonth])
 
   const navigateMonth = (dir: number) => {
-    const d = new Date(currentMonth + '-01')
-    d.setMonth(d.getMonth() + dir)
-    setCurrentMonth(d.toISOString().substring(0, 7))
+    const [year, month] = currentMonth.split('-').map(Number)
+    const d = new Date(year, month - 1 + dir, 1)
+    const newMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    setCurrentMonth(newMonth)
   }
 
   const monthLabel = useMemo(() => {
-    const d = new Date(currentMonth + '-01')
+    const [year, month] = currentMonth.split('-').map(Number)
+    const d = new Date(year, month - 1, 1)
     return d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
   }, [currentMonth])
 

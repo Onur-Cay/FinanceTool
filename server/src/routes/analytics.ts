@@ -46,7 +46,8 @@ app.get('/monthly', (c) => {
            COALESCE(SUM(es.amount), 0) as total
     FROM members m
     LEFT JOIN expense_shares es ON es.member_id = m.id
-    LEFT JOIN expenses e ON e.id = es.expense_id AND e.date LIKE ? || '%'
+    LEFT JOIN expenses e ON e.id = es.expense_id
+    WHERE e.date LIKE ? || '%'
     GROUP BY m.id
     HAVING total > 0
     ORDER BY total DESC
