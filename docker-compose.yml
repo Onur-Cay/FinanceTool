@@ -1,0 +1,25 @@
+name: financetool
+
+services:
+  financetool:
+    build: .
+    container_name: financetool
+    ports:
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: /DATA/AppData/financetool
+        target: /data
+    restart: unless-stopped
+
+x-casaos:
+  title:
+    en_us: FinanceTool
+  description:
+    en_us: Self-hosted budget management for couples & families. Track expenses, split costs, view analytics with charts.
+  category: Finance
+  icon: https://cdn-icons-png.flaticon.com/512/2830/2830284.png
+  port_map: "3000"
+  scheme: http
+  author: Onur
+  developer: Onur
