@@ -37,7 +37,7 @@ export default function Analytics() {
       const [monthlyData, yearlyData, balData, budgetData, memData, settingsData] = await Promise.all([
         api.getMonthlyAnalytics(currentMonth),
         api.getYearlyAnalytics(currentYear),
-        api.getBalance(currentMonth),
+        api.getCumulativeBalance(),
         api.getBudgetLimits(),
         api.getMembers(),
         api.getSettings(),

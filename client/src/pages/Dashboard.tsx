@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [analytics, setAnalytics] = useState<MonthlyAnalytics | null>(null)
   const [balances, setBalances] = useState<BalanceInfo[]>([])
+  const [cumulativeBalances, setCumulativeBalances] = useState<BalanceInfo[]>([])
   const [currency, setCurrency] = useState('£')
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
 
@@ -27,15 +28,17 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const [expData, analyticsData, balanceData, settingsData] = await Promise.all([
+      const [expData, analyticsData, balanceData, cumulativeData, settingsData] = await Promise.all([
         api.getExpenses({ month: currentMonth }),
         api.getMonthlyAnalytics(currentMonth),
         api.getBalance(currentMonth),
+        api.getCumulativeBalance(),
         api.getSettings(),
       ])
       setExpenses(expData)
       setAnalytics(analyticsData)
       setBalances(balanceData.balances || [])
+      setCumulativeBalances(cumulativeData.balances || [])
       setCurrency(settingsData.currency || '£')
     } catch (err) {
       console.error('Failed to fetch dashboard data', err)
@@ -57,10 +60,10 @@ export default function Dashboard() {
   const recentExpenses = expenses.slice(0, 8)
   const pieData = analytics?.by_category?.map(c => ({ name: c.category_name, value: c.total })) || []
 
-  // Calculate who owes whom
-  const owesSummary = balances.length >= 2
-    ? balances.filter(b => b.balance < 0).map(debtor => {
-        const creditor = balances.find(b => b.balance > 0)
+  // Calculate who owes whom (cumulative across all time)
+  const owesSummary = cumulativeBalances.length >= 2
+    ? cumulativeBalances.filter(b => b.balance < -0.01).map(debtor => {
+        const creditor = cumulativeBalances.find(b => b.balance > 0.01)
         if (!creditor) return null
         return {
           from: debtor.member_name,
@@ -116,10 +119,11 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Balance Summary */}
+      {/* Cumulative Balance Summary */}
       {owesSummary.length > 0 && (
         <Card>
           <CardContent className="pt-6">
+            <p className="text-xs text-muted-foreground mb-2">Overall balance (all time)</p>
             {owesSummary.map((s: any, i: number) => (
               <p key={i} className="text-sm">
                 <span className="font-medium">{s.from}</span> owes <span className="font-medium">{s.to}</span>: <span className="font-bold text-primary">{formatCurrency(s.amount, currency)}</span>

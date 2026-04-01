@@ -10,4 +10,5 @@ data/
 .env.*
 .claude/
 *.tsbuildinfo
+bun.lock
 server/public/

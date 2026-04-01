@@ -77,6 +77,9 @@ export const api = {
   getBalance(month: string) {
     return request<any>(`/analytics/balance?month=${month}`)
   },
+  getCumulativeBalance() {
+    return request<any>(`/analytics/cumulative-balance`)
+  },
 
   // Settlements
   getSettlements(params?: Record<string, string>) {

@@ -71,7 +71,7 @@ export default function MemberBalance({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Member Balances</CardTitle>
+          <CardTitle>Overall Balance</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground text-center py-8">
@@ -86,7 +86,7 @@ export default function MemberBalance({
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Member Balances</CardTitle>
+          <CardTitle>Overall Balance</CardTitle>
           <Button size="sm" onClick={onSettleUp}>
             Settle Up
           </Button>
