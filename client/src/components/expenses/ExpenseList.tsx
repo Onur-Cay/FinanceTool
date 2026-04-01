@@ -121,7 +121,7 @@ export function ExpenseList({ expenses, currency = '£', onEdit, onDelete }: Exp
             <div className="divide-y">
               {group.expenses.map((expense) => {
                 const Icon = getCategoryIcon(expense.category_icon)
-                const primaryShare = expense.shares?.[0]
+                const isSplitTransaction = expense.shares && expense.shares.length > 1
 
                 return (
                   <div
@@ -144,14 +144,30 @@ export function ExpenseList({ expenses, currency = '£', onEdit, onDelete }: Exp
                           {expense.description}
                         </p>
                       )}
-                      {primaryShare && (
+                      {isSplitTransaction ? (
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <span className="text-xs font-medium text-purple-500">Split</span>
+                          <span className="text-xs text-muted-foreground">
+                            {expense.shares.map((share, i) => (
+                              <span key={share.member_id}>
+                                {i > 0 && ' · '}
+                                <span
+                                  className="inline-block h-1.5 w-1.5 rounded-full mr-0.5 align-middle"
+                                  style={{ backgroundColor: share.member_color || '#888' }}
+                                />
+                                {share.member_name} {formatCurrency(share.amount, currency)}
+                              </span>
+                            ))}
+                          </span>
+                        </div>
+                      ) : expense.shares?.[0] && (
                         <div className="flex items-center gap-1.5 mt-1">
                           <span
                             className="inline-block h-2 w-2 rounded-full shrink-0"
-                            style={{ backgroundColor: primaryShare.member_color || '#888' }}
+                            style={{ backgroundColor: expense.shares[0].member_color || '#888' }}
                           />
                           <span className="text-xs text-muted-foreground">
-                            {primaryShare.member_name}
+                            {expense.shares[0].member_name}
                           </span>
                         </div>
                       )}
