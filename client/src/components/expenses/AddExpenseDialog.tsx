@@ -252,11 +252,15 @@ export function AddExpenseDialog({ open, onOpenChange, expense, onSaved }: AddEx
                 <Input
                   id="amount"
                   type="text"
-                  inputMode="decimal"
+                  inputMode="tel"
                   placeholder="0.00 or 10+5+3.50"
                   className="pl-8 text-lg font-semibold h-12"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => {
+                    // Allow digits, decimal points, and + for expressions
+                    const filtered = e.target.value.replace(/[^0-9.+]/g, '')
+                    setAmount(filtered)
+                  }}
                 />
               </div>
               {expressionTotal !== null && (
