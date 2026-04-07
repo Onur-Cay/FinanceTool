@@ -321,22 +321,35 @@ export function AddExpenseDialog({ open, onOpenChange, expense, onSaved }: AddEx
             {/* Amount */}
             <div className="grid gap-2">
               <Label htmlFor="amount">Amount</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-muted-foreground">
-                  £
-                </span>
-                <Input
-                  id="amount"
-                  type="text"
-                  inputMode="tel"
-                  placeholder="0.00 or 10+5+3.50"
-                  className="pl-8 text-lg font-semibold h-12"
-                  value={amount}
-                  onChange={(e) => {
-                    const filtered = e.target.value.replace(/[^0-9.+]/g, '')
-                    setAmount(filtered)
+              <div className="relative flex items-center gap-1">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-muted-foreground">
+                    £
+                  </span>
+                  <Input
+                    id="amount"
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00 or 10+5+3.50"
+                    className="pl-8 text-lg font-semibold h-12"
+                    value={amount}
+                    onChange={(e) => {
+                      const filtered = e.target.value.replace(/[^0-9.+]/g, '')
+                      setAmount(filtered)
+                    }}
+                  />
+                </div>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="h-12 w-12 shrink-0 rounded-md border border-input bg-background text-xl font-bold hover:bg-accent active:bg-accent"
+                  onPointerDown={(e) => {
+                    e.preventDefault()
+                    setAmount((prev) => prev + '+')
                   }}
-                />
+                >
+                  +
+                </button>
               </div>
               {expressionTotal !== null && (
                 <p className="text-xs text-muted-foreground">
